@@ -130,4 +130,28 @@ Configuring Port Forwarding with NAT:
 ## Task 3: Install Gogs (a self-hosted git service)
 ##### Command: Pull docker image gogs
       docker pull gogs/gogs
+      
+#### Default Gogs run on : 3000 port so change it into 3100
+##### Command: Run Docker as detached mode on port: 3100 and publish 3100
+      docker run --name=gogs -p 10022:22 -d -p 3100:3100 -v /var/gogs:/data gogs/gogs
+      
+#### How to check if it is up and running as expected?      
+##### Command: 
+      sudo netstat -plnt | grep 3100
+        tcp        0      0 0.0.0.0:3100            0.0.0.0:*               LISTEN      25276/docker-proxy  
+        tcp6       0      0 :::3100                 :::*                    LISTEN      25281/docker-proxy  
+        
 
+          
+##### Command: To modify VM configuration usign above command
+       VBoxManage controlvm "Ubuntu 18.04 Server Fresh" natpf1 "GogUI,tcp,127.0.0.1,3100,,3100"
+       
+##### User can change configuration in future directly modify app.ini file in following directory of VM
+    /var/gogs/gogs/conf
+
+   ###### For the first time, configure it following the installation steps 
+   Database uses SQLite3 (no external DB required)
+   Figure out the domain, ports and URL to be used
+        Create an admin user as well (username: root password: 123456)
+
+        
