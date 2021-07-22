@@ -145,13 +145,31 @@ Configuring Port Forwarding with NAT:
           
 ##### Command: To modify VM configuration usign above command
        VBoxManage controlvm "Ubuntu 18.04 Server Fresh" natpf1 "GogUI,tcp,127.0.0.1,3100,,3100"
-       
+
+#### Well-Known Issue of URL
 ##### User can change configuration in future directly modify app.ini file in following directory of VM
     /var/gogs/gogs/conf
 
-   ###### For the first time, configure it following the installation steps 
-   Database uses SQLite3 (no external DB required)
-   Figure out the domain, ports and URL to be used
-        Create an admin user as well (username: root password: 123456)
+   ##### For the first time, configure it following the installation steps 
+   ###### Database uses SQLite3 (no external DB required)
+   ###### Figure out the domain, ports and URL to be used
+   ###### Create an admin user as well (username: root password: 123456)
+
+# Task 4: Create a Demo Organization/Repository in Gogs
+![alt_text](https://github.com/punit5658/interview/blob/main/task-4.png)
+
+##### Add Configuration before add first commit
+        git config --global user.email "test@test.com"
+        git config --global user.name "test"
+        
+##### Following command help to commit file:
+        touch README.md
+        git init
+        git add README.md
+        git commit -m "first commit"
+        git remote add origin http://127.0.0.1:3100/demo/go-web-hello-world.git
+        git push -u origin master
+        
+        
 
         
