@@ -286,7 +286,47 @@ Use golang to build a hello world web app (listen to 8081 port) and check-in the
 - In Dockerfile, we can avoid compilation and add compiled file direct for run
 
 # Task 8: Deploy the Hello World Container Image in Kubernetes
+##### Command: create deplyment from docker repository
+            kubectl apply -f goserver.yaml            
 
+##### Command: create service to expose port to access HOST to listern
+            kubectl apply -f goserver-service.yaml
+            
+##### Command: check all pod, service, replicate are created and running
+            kubectl get all
+            
+##### Command: Expose URL for Host 
+            VBoxManage controlvm "Ubuntu 18.04 Server Fresh" natpf1 "GoK8Ui,tcp,127.0.0.1,31080,,31080"  
+            
+# Task 9: Install Kubernetes Dashboard  
+#### Generate Private key and signing request
+            openssl genrsa -des3 -passout pass:over4chars -out dashboard.pass.key 2048
+            openssl rsa -passin pass:over4chars -in dashboard.pass.key -out dashboard.key
+            rm dashboard.pass.key
+            openssl req -new -key dashboard.key -out dashboard.csr
+#### Generate SSL Certificates to make works dashboard            
+            openssl x509 -req -sha256 -days 365 -in dashboard.csr -signkey dashboard.key -out dashboard.crt
+#### GET secret
+            kubectl get secret -A | grep kubernetes-dashboard-certs > /dev/null
+            
+#### Delete old secret if exist
+            kubectl delete secret kubernetes-dashboard-certs -n kubernetes-dashboard
+#### Create new secret
+            kubectl create secret generic kubernetes-dashboard-certs --from-file=certs -n kubernetes-dashboard
+
+#### Create Deployments: ( Edit deployment before run)
+            kubectl create --edit -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+            
+# Task 10: Build Gogs container image and push it to dockerhub
+ #### Added most of the files to gogs and some of files in current repository
+ #### Added go-web-hello-world repo: https://hub.docker.com/repository/docker/6num/go-web-hello-world:v0.1
+ #### Added Gogs repository to https://hub.docker.com/repository/docker/6num/gogs:v0.1
+ 
+# Task 99: Publish your work
+ All task publish. Having a lots of joy.
+ 
+            
+            
             
 
-        
+            
