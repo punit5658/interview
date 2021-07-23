@@ -246,7 +246,7 @@ Use golang to build a hello world web app (listen to 8081 port) and check-in the
 ##### Command: Install Golang
         sudo apt  install golang-go
         touch hello-world.go
-        vi hello-world.go // Added content to file
+        vi hello-world.go // Added file in repo
         go build hello-world.go
 ##### Run File: 
            ./hello-world
@@ -254,7 +254,39 @@ Use golang to build a hello world web app (listen to 8081 port) and check-in the
            Output: Go Web Hello World!
 
 # Task 7: Run the App in Container
-##### Command: 
+##### Command: Created Dockerfile
+            FROM golang:1.7-alpine
+            RUN mkdir -p /app
+            WORKDIR /app
+            ADD . /app
+            CMD ["go","run","hello-world.go"]
+            
+##### Command: Build Docker image with Tag
+            docker build --tag go-web-hello-world:v0.1 .
+            
+##### Command: Run docker image             
+            docker run -itd -p 8082:8081 <image-id>
 
+##### Command: Expose URL for Host
+            VBoxManage controlvm "Ubuntu 18.04 Server Fresh" natpf1 "GoLangUI,tcp,127.0.0.1,8082,,8082"
+            
+##### Added: hello-world.go
+##### Added: Gogs repository
+            git init
+            git commit -m "Go Lang HelloWorld Docker"
+            git remote add origin http://127.0.0.1:3100/root/goapi.git
+            git push -u origin master
+            
+#### What is the size of the container image compressed size?
+- 75.09 MB
+#### Can it be optimized?
+- Added caching layer.
+
+#### yes
+- In Dockerfile, we can avoid compilation and add compiled file direct for run
+
+# Task 8: Deploy the Hello World Container Image in Kubernetes
+
+            
 
         
