@@ -147,8 +147,8 @@ Configuring Port Forwarding with NAT:
        VBoxManage controlvm "Ubuntu 18.04 Server Fresh" natpf1 "GogUI,tcp,127.0.0.1,3100,,3100"
 
 #### Well-Known Issue of URL
-##### User can change configuration in future directly modify app.ini file in following directory of VM
-    /var/gogs/gogs/conf
+##### User can change configuration in future directly modify port, url from app.ini file in following directory of VM
+    /var/gogs/gogs/conf/app.ini
 
    ##### For the first time, configure it following the installation steps 
    ###### Database uses SQLite3 (no external DB required)
@@ -156,11 +156,13 @@ Configuring Port Forwarding with NAT:
    ###### Create an admin user as well (username: root password: 123456)
 
 # Task 4: Create a Demo Organization/Repository in Gogs
+
+##### Created Organization and Repository
 ![alt_text](https://github.com/punit5658/interview/blob/main/task-4.png)
 
 ##### Add Configuration before add first commit
         git config --global user.email "test@test.com"
-        git config --global user.name "test"
+        git config --global user.name "root"
         
 ##### Following command help to commit file:
         touch README.md
@@ -171,5 +173,88 @@ Configuring Port Forwarding with NAT:
         git push -u origin master
         
         
+# Task 5: Install a Single Node Kubernetes Cluster Using Kind
+#### Ref: https://kind.sigs.k8s.io/docs/user/quick-start/.        
+##### Command: Download Stable releases
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+        
+##### Command: Apply Executable permission
+        chmod +x ./kind
+        
+##### Command: Move file to /bin folder to access globally
+        mv ./kind /bin/
+
+##### Created Yaml config file for cluster
+        kind: Cluster
+        apiVersion: kind.x-k8s.io/v1alpha4
+        nodes:
+        - role: control-plane
+          extraPortMappings:
+          - containerPort: 30028
+            hostPort: 8228
+            listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
+##### Command: Kubectl command
+        kind create cluster --config=kind-config.yaml
+        Creating cluster "kind" ...
+         ✓ Ensuring node image (kindest/node:v1.21.1) 🖼 
+         ✓ Preparing nodes 📦  
+         ✓ Writing configuration 📜 
+         ✓ Starting control-plane 🕹️ 
+         ✓ Installing CNI 🔌 
+         ✓ Installing StorageClass 💾 
+        Set kubectl context to "kind-kind"
+        You can now use your cluster with:
+        kubectl cluster-info --context kind-kind
+        Thanks for using kind! 😊
+
+#### Ref: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ 
+##### Command: Install kubectl 
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+        chmod +x kubectl
+        mkdir -p ~/.local/bin/kubectl
+        mv ./kubectl ~/.local/bin/kubectl
+        
+##### Command: kubectl version
+        kubectl version --client
+        Client Version: version.Info{Major:"1", Minor:"21", GitVersion:"v1.21.0", GitCommit:"cb303e613a121a29364f75cc67d3d580833a7479", GitTreeState:"clean",   
+        BuildDate:"2021-04-08T16:31:21Z", GoVersion:"go1.16.1", Compiler:"gc", Platform:"linux/amd64"}
+        
+##### Command: Check cluster info using kubectl
+        kubectl cluster-info --context kind-kind
+        Kubernetes control plane is running at https://127.0.0.1:32847
+        CoreDNS is running at https://127.0.0.1:32847/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+        
+##### Command: List nodes
+        kubectl get nodes
+        NAME                 STATUS   ROLES                  AGE    VERSION
+        kind-control-plane   Ready    control-plane,master   129m   v1.21.1
+        
+##### Command: Get Node info
+        kubectl describe nodes kind-control-plane
+        
+##### Command: Get all pods        
+        kubectl get pods
+        
+##### Command: Add ~/.kube/config to Gogs repository
+        git add ~/.kube/config
+        git commit -m "Kubernates configuration files"
+        git push origin master
+
+        
+# Task 6: Build and Run a Golang Web Application
+Use golang to build a hello world web app (listen to 8081 port) and check-in the code to the master branch of the repo created above
+##### Command: Install Golang
+        sudo apt  install golang-go
+        touch hello-world.go
+        vi hello-world.go // Added content to file
+        go build hello-world.go
+##### Run File: 
+           ./hello-world
+           call file : curl localhost:8081
+           Output: Go Web Hello World!
+
+# Task 7: Run the App in Container
+##### Command: 
+
 
         
